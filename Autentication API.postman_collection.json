@@ -1,0 +1,29 @@
+{
+	"info": {
+		"_postman_id": "7d18e436-0714-4f69-ae3f-bef11e793d4c",
+		"name": "Autentication API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication Endpoint",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{server}}/authentication",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"authentication"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

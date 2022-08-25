@@ -1,0 +1,188 @@
+{
+	"info": {
+		"_postman_id": "897da196-149e-40cd-9c2f-6d61bc975a3a",
+		"name": "Keycloak mgmt",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "generation + refresh token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"refresh_token\", jsonData.refresh_token);",
+							"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "client_id",
+							"value": "{{client_id}}",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "{{client_secret}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{server}}/auth/realms/{{realm}}/protocol/openid-connect/token",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"auth",
+						"realms",
+						"{{realm}}",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "configuration",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{server}}/auth/realms/{{realm}}/.well-known/openid-configuration",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"auth",
+						"realms",
+						"{{realm}}",
+						".well-known",
+						"openid-configuration"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "authorize",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "client_id",
+							"value": "{{client_id}}",
+							"type": "text"
+						},
+						{
+							"key": "response",
+							"value": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{server}}/auth/realms/{{realm}}/protocol/openid-connect/auth?response_type=code&client_id={{client_id}}",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"auth",
+						"realms",
+						"{{realm}}",
+						"protocol",
+						"openid-connect",
+						"auth"
+					],
+					"query": [
+						{
+							"key": "response_type",
+							"value": "code"
+						},
+						{
+							"key": "client_id",
+							"value": "{{client_id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user info",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{server}}/auth/realms/{{realm}}/protocol/openid-connect/userinfo",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"auth",
+						"realms",
+						"{{realm}}",
+						"protocol",
+						"openid-connect",
+						"userinfo"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
